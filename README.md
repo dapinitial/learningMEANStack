@@ -19,6 +19,8 @@ Mongoose
 Robomongo [optional but cool]
 Mocha
 ES6
+Google Chrome
+Postman Chrome extension
 
 Clone this repo, cd into the directory that was created when you cloned the repo and `npm install` - you should be good to go!
 
