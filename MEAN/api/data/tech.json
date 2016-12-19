@@ -1,0 +1,28 @@
+[{
+	"_id": {
+		"$oid": "584d2fb3ea7fcb5893502a09"
+	},
+	"name": "MongoDB",
+	"role": "Database"
+},
+{
+	"_id": {
+		"$oid": "584d309dea7fcb5893502a0a"
+	},
+	"name": "Express",
+	"role": "Web application server"
+},
+{
+	"_id": {
+		"$oid": "584d309dea7fcb5893502a0b"
+	},
+	"name": "Angular",
+	"role": "Front-end framework"
+},
+{
+	"_id": {
+		"$oid": "584d309dea7fcb5893502a0c"
+	},
+	"name": "Node.js",
+	"role": "Platform"
+}]

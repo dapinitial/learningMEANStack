@@ -1,0 +1,4 @@
+{
+  "ignore": ["public/*", ".jshintrc", ".README.md", ".gitignore"],
+  "verbose": true
+}
