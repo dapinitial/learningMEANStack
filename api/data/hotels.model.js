@@ -1,3 +1,5 @@
+// don't forget to require this file into the bottom of the db.js connection file.
+
 var mongoose = require('mongoose');
 
 var hotelSchema = new mongoose.Schema({
@@ -21,3 +23,5 @@ var hotelSchema = new mongoose.Schema({
   * specified, mongoose will automagically point a reference to the "lowercase, * pluralized" form of the model name.
   */
 mongoose.model('Hotel', hotelSchema);
+
+// don't forget to require this file into the bottom of the db.js connection file.

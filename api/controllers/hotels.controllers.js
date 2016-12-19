@@ -68,7 +68,7 @@ module.exports.hotelsAddOne = function(req, res) {
 
   if(req.body && req.body.name && req.body.stars) {
     newHotel = req.body;
-    newHotel.stars = parseInt(req.body.stars, 10)
+    newHotel.stars = parseInt(req.body.stars, 10);
     console.log(newHotel);
     collection.insertOne(newHotel, function(err, response) {
       console.log(response);
