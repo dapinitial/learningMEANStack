@@ -2,6 +2,35 @@
 
 var mongoose = require('mongoose');
 
+var reviewSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0 // can write 'default' to offset warning for reserved keyword.
+  },
+  review: {
+    type: String,
+    required: true
+  },
+  createdOn: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+var roomSchema = new mongoose.Schema({
+  type: String,
+  number: Number,
+  description: String,
+  photos: [String],
+  price: Number
+});
+
 var hotelSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,7 +45,9 @@ var hotelSchema = new mongoose.Schema({
   services: [String],
   description: String,
   photos: [String],
-  currency: String
+  currency: String,
+  reviews: [reviewSchema],
+  rooms: [roomSchema]
 });
 
 /** mongoose.model('ModelName', modelSchema, 'collection') ** If no collection
