@@ -22,6 +22,9 @@ ES6
 Google Chrome
 Postman Chrome extension
 
+***Don't forget to import your data into mongo #FROM THE COMMAND LINE!# ***
+mongoimport --db meanhotel --collection hotels --type json  --file ~/learningMEANStack/api/data/hotel-data.json --jsonArray
+
 Clone this repo, cd into the directory that was created when you cloned the repo and `npm install` - you should be good to go!
 
 To run the app type: `nodemon app.js` or `npm start`.

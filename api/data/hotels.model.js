@@ -52,7 +52,7 @@ var hotelSchema = new mongoose.Schema({
     address: String,
     coordinates: {
       type: [Number],
-      index: '2dsphere' // indexes on a flat plane.
+      index: '2dsphere' // indexes on a flat plane. Geospacial data
     }// Always store coordinates in East-West, North-South aka: latitude(E/W) longitude(N/S).
   }
 });
