@@ -47,7 +47,14 @@ var hotelSchema = new mongoose.Schema({
   photos: [String],
   currency: String,
   reviews: [reviewSchema],
-  rooms: [roomSchema]
+  rooms: [roomSchema],
+  location: {
+    address: String,
+    coordinates: {
+      type: [Number],
+      index: '2dsphere' // indexes on a flat plane.
+    }// Always store coordinates in East-West, North-South aka: latitude(E/W) longitude(N/S).
+  }
 });
 
 /** mongoose.model('ModelName', modelSchema, 'collection') ** If no collection
