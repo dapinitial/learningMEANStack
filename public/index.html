@@ -1,16 +1,29 @@
 <!doctype html>
-<html>
+<html ng-app>
   <head>
     <title>MEAN hotel</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
   </head>
   <body>
     <h1>MEAN hotel homepage</h1>
 
+    <div ng-init="name= 'Tamas'">
+      {{ name }}
+      <p ng-bind="name"></p>
+    </div>
+
+
+
     <script
       src="https://code.jquery.com/jquery-3.1.1.min.js"
       integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
       crossorigin="anonymous">
-  </script>
+    </script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-route/angular-route.js"></script>
+    <script src="angular-app/app.js"></script>
   </body>
 </html>
