@@ -21,6 +21,10 @@ Mocha
 ES6
 Google Chrome
 Postman Chrome extension
+Angular 1
+Angular Route
+Bootstap
+Considerations: WebPack, Yarn, React, custom S/CSS Framework/Workflow
 
 ***Don't forget to import your data into mongo #FROM THE COMMAND LINE!# ***
 mongoimport --db meanhotel --collection hotels --type json  --file ~/learningMEANStack/api/data/hotel-data.json --jsonArray
