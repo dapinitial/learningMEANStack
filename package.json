@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "mocha": "^3.2.0"
   },
   "dependencies": {
