@@ -1,96 +1,48 @@
+// Bring in the mongoose model for the hotels
 var mongoose = require('mongoose');
 var Hotel = mongoose.model('Hotel');
 
 // GET all reviews for a hotel
 module.exports.reviewsGetAll = function(req, res) {
+  // Get the URL parmater for the hotel ID.
   var hotelId = req.params.hotelId;
-  console.log('GET a hotel', hotelId);
-
-  Hotel
-    .findById(hotelId)
-    .select('reviews')
-    //.findOne({_id: ObjectId(hotelId)}
-    .exec(function(err, hotels) {
-      res
-        .status(200)
-        .json(hotels.reviews);
-    });
-
-};
-
-// GET one review for a hotel
-module.exports.reviewsGetOne = function(req, res) {
-  var hotelId = req.params.hotelId;
-  var reviewId = req.params.reviewId;
-  console.log('GET reviewId ' + reviewId + ' for hotelId ' + hotelId);
-
-  Hotel
-    .findById(hotelId)
-    .select('reviews')
-    //.findOne({_id: ObjectId(hotelId)}
-    .exec(function(err, hotel) {
-      var review = hotel.reviews.id(reviewId);
-      res
-        .status(200)
-        .json(review);
-    });
-};
-
-var _addReview = function(req, res, hotel) {
-  hotel.reviews.push({
-    name: req.body.name,
-    rating: parseInt(req.body.rating, 10),
-    review: req.body.review
-  });
-  hotel.save(function(err, hotelUpdated) {
-    if (err) {
-      res
-        .status(500)
-        .json(err);
-    } else {
-      res
-        .status(201)
-        .json(hotelUpdated.reviews[hotelUpdated.reviews.length - 1]);
-    }
-  });
-};
-
-module.exports.reviewsAddOne = function(req, res) {
-  var hotelId = req.params.hotelId;
-  var reviewId = req.params.reviewId;
-  console.log('GET hotelId ' , hotelId);
-
+  console.log('GET hotelId', hotelId);
+  // Return the reviews for the requested hotel
   Hotel
     .findById(hotelId)
     .select('reviews')
     .exec(function(err, doc) {
       var response = {
         status: 200,
-        message: []
+        message: {}
       };
+
       if (err) {
-        console.log('Error Finding Hotel');
+        console.log('Error finding hotel reviews');
         response.status = 500;
         response.message = err;
       } else if (!doc) {
-        console.log('Hotel id not found in database ', id);
         response.status = 404;
         response.message = {
-          'message' : 'Hotel ID not found ' + id
+          "message": "Hotel ID not found"
         };
-      }
-      if (doc) {
-        _addReview(req, res, doc);
       } else {
-        res
-          .status(response.status)
-          .json(response.message);
-        }
+        response.message = doc.reviews;
+      }
+
+      console.log('Returned doc', doc);
+
+      // Return the response
+      res
+        .status(response.status)
+        .json(response.message);
     });
+
 };
 
-// GET one review for a hotel
-module.exports.locationGetOne = function(req, res) {
+// GET single review for a hotel
+module.exports.reviewsGetOne = function(req, res) {
+  // Get the URL parmater for the hotel and review IDs.
   var hotelId = req.params.hotelId;
   var reviewId = req.params.reviewId;
   console.log('GET reviewId ' + reviewId + ' for hotelId ' + hotelId);
@@ -98,59 +50,158 @@ module.exports.locationGetOne = function(req, res) {
   Hotel
     .findById(hotelId)
     .select('reviews')
-    //.findOne({_id: ObjectId(hotelId)}
     .exec(function(err, hotel) {
-      var review = hotel.reviews.id(reviewId);
+      var response = {
+        status: 200,
+        message: {}
+      };
+
+      if (err) {
+        console.log('Error finding hotel');
+        response.status = 500;
+        response.message = err;
+      } else if (!hotel) {
+        console.log("Hotel id not found in database", id);
+        response.status = 404;
+        response.message = {
+          "message": "Hotel ID not found " + id
+        };
+      } else {
+        response.message = hotel.reviews.id(reviewId);
+        if (response.message === null) {
+          response.status = 404;
+          response.message = {
+            "message": "Hotel Review ID not found " + reviewId
+          };
+        }
+      }
+
+      // Return the response
       res
-        .status(200)
-        .json(review);
+        .status(response.status)
+        .json(response.message);
+    });
+
+};
+
+// Add a review to a hotel
+var _addReview = function(req, res, hotel) {
+
+  // Add a review on to the reviews array
+  hotel.reviews.push({
+    name: req.body.name,
+    rating: parseInt(req.body.rating, 10),
+    review: req.body.review
+  });
+
+  // Save the hotel back to the database
+  hotel.save(function(err, hotelUpdated) {
+    console.log(hotel.reviews);
+    if (err) {
+      res
+        .status(500)
+        .json(err);
+    } else {
+      // If no errors, return just the new review as feedback to the user.
+      res
+        .status(201)
+        .json(hotelUpdated.reviews[hotelUpdated.reviews.length - 1]);
+    }
+  });
+
+};
+
+module.exports.reviewsAddOne = function(req, res) {
+  // Get the URL parmater for the hotel ID.
+  var hotelId = req.params.hotelId;
+
+  console.log('POST hotelId', hotelId);
+
+  Hotel
+    .findById(hotelId)
+    .select('reviews')
+    .exec(function(err, doc) {
+      var response = {
+        status: 201,
+        message: {}
+      };
+
+      if (err) {
+        console.log('Error finding hotel');
+        response.status = 500;
+        response.message = err;
+      } else if (!doc) {
+        console.log('Hotel id not found in database', id);
+        response.status = 404;
+        response.message = {
+          "message": "Hotel ID not found " + id
+        };
+      } else {
+        response.message = doc.reviews ? doc.reviews : [];
+      }
+
+      console.log('Returned doc', doc);
+
+      if (doc) {
+        _addReview(req, res, doc);
+      } else {
+        // Return the response
+        res
+          .status(response.status)
+          .json(response.message);
+      }
+
     });
 };
 
-// PUT, Update a hotel review
 module.exports.reviewsUpdateOne = function(req, res) {
+  // Get the URL parmater for the hotel and review IDs.
   var hotelId = req.params.hotelId;
   var reviewId = req.params.reviewId;
-  console.log('PUT reviewId ' + reviewId + ' for hotelId ' + hotelId);
+  console.log('GET reviewId ' + reviewId + ' for hotelId ' + hotelId);
 
   Hotel
     .findById(hotelId)
     .select('reviews')
     .exec(function(err, hotel) {
-      var thisReview;
+      var review;
       var response = {
         status: 200,
         message: {}
       };
+
       if (err) {
         console.log('Error finding hotel');
         response.status = 500;
         response.message = err;
-      } else if (!hotel){
-        console.log('Hotel id not found in db ', id);
+      } else if (!hotel) {
+        console.log("Hotel id not found in database", id);
         response.status = 404;
         response.message = {
-          'message' : 'Hotel If not found' + id
+          "message": "Hotel ID not found " + id
         };
       } else {
-        // Get the review
-        thisReview = hotel.reviews.id(reviewId);
-        // If the review doesn't exist mongoose returns null
-        if (!thisReview) {
+        review = hotel.reviews.id(reviewId);
+        if (review === null) {
           response.status = 404;
           response.message = {
-            'message' : 'Review Id not found' + reviewId
+            "message": "Hotel Review ID not found " + reviewId
           };
         }
       }
+
       if (response.status !== 200) {
+        // Return the response
         res
           .status(response.status)
           .json(response.message);
       } else {
-        thisReview.name = req.body.name;
-        thisReview.rating = parseInt(req.body.rating, 10);
-        thisReview.review = req.body.review;
+        // Assign new values to the review subdocument
+        review.name = req.body.name;
+        review.rating = parseInt(req.body.rating, 10);
+        review.review = req.body.review;
+
+        // Save the hotel document
         hotel.save(function(err, hotelUpdated) {
           if (err) {
             res
@@ -166,48 +217,53 @@ module.exports.reviewsUpdateOne = function(req, res) {
     });
 };
 
-// DELETE, remove a hotel
+
 module.exports.reviewsDeleteOne = function(req, res) {
+  // Get the URL parmater for the hotel and review IDs.
   var hotelId = req.params.hotelId;
   var reviewId = req.params.reviewId;
-  console.log('PUT reviewId ' + reviewId + ' for hotelId ' + hotelId);
+  console.log('GET reviewId ' + reviewId + ' for hotelId ' + hotelId);
 
   Hotel
     .findById(hotelId)
     .select('reviews')
     .exec(function(err, hotel) {
-      var thisReview;
+      var review;
       var response = {
         status: 200,
         message: {}
       };
+
       if (err) {
         console.log('Error finding hotel');
         response.status = 500;
         response.message = err;
-      } else if (!hotel){
-        console.log('Hotel id not found in db ', id);
+      } else if (!hotel) {
+        console.log("Hotel id not found in database", id);
         response.status = 404;
         response.message = {
-          'message' : 'Hotel If not found' + id
+          "message": "Hotel ID not found " + id
         };
       } else {
-        // Get the review
-        thisReview = hotel.reviews.id(reviewId);
-        // If the review doesn't exist mongoose returns null
-        if (!thisReview) {
+        review = hotel.reviews.id(reviewId);
+        if (review === null) {
           response.status = 404;
           response.message = {
-            'message' : 'Review Id not found' + reviewId
+            "message": "Hotel Review ID not found " + reviewId
           };
         }
       }
+
       if (response.status !== 200) {
+        // Return the response
         res
           .status(response.status)
           .json(response.message);
       } else {
+        // Remove the review subdocument
         hotel.reviews.id(reviewId).remove();
+
+        // Save the hotel document
         hotel.save(function(err, hotelUpdated) {
           if (err) {
             res

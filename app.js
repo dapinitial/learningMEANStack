@@ -20,6 +20,7 @@ app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 // Enable parsing of posted forms
 app.use(bodyParser.urlencoded({ extended: false })); // False limits data types to strings and arrays. Setting to true gives access to other datatypes.
+app.use(bodyParser.json());
 app.use('/api', routes);
 
 var server = app.listen(app.get('port'), function() {
